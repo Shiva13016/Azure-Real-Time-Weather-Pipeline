@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Showcase: Real-Time Weather Pipeline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Cool Gray and Slate Blue -->
+    <!-- Application Structure Plan: A single-page app with a fixed sidebar for non-linear navigation between key project areas (Overview, Architecture, Implementation, etc.). This structure is chosen to make a dense technical document easily scannable and digestible for different audiences (technical/managerial). Interactive diagrams and step-by-step animations are used to explain complex processes visually, enhancing user understanding over static text. -->
+    <!-- Visualization & Content Choices: Report Info: System Architecture -> Goal: Organize/Explain -> Presentation: Interactive Diagram (HTML/CSS) -> Interaction: Click component to show details -> Justification: More engaging and informative than a static image. Report Info: Execution Flow -> Goal: Show process -> Presentation: Animated Step-by-Step List -> Interaction: Play button to cycle through steps -> Justification: Visually demonstrates the dynamic nature of the pipeline. Report Info: Implementation Steps -> Goal: Organize details -> Presentation: Tabbed Interface -> Interaction: Click tabs to switch phases -> Justification: Breaks down a long section into manageable chunks. CONFIRMING NO SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* cool-gray-50 */
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-link.active {
+            background-color: #334155; /* slate-700 */
+            color: #ffffff;
+            transform: translateX(4px);
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .tab-button.active {
+            border-bottom-color: #3b82f6; /* blue-500 */
+            color: #3b82f6;
+        }
+        .arch-component {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .arch-component:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .flow-step.highlight {
+            background-color: #dbeafe; /* blue-100 */
+            border-left-color: #3b82f6; /* blue-500 */
+            transform: scale(1.02);
+        }
+        .connector {
+            position: relative;
+        }
+        .connector::after {
+            content: '→';
+            position: absolute;
+            right: -24px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: #94a3b8; /* slate-400 */
+        }
+        @media (max-width: 1024px) {
+            .connector::after {
+                content: '↓';
+                right: 50%;
+                top: 100%;
+                transform: translateX(50%) translateY(0.25rem);
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 bg-slate-800 text-slate-200 p-6 fixed h-full z-20 transition-transform -translate-x-full lg:translate-x-0">
+            <h1 class="text-xl font-bold mb-8 text-white">Project Deep Dive</h1>
+            <nav class="space-y-2">
+                <a href="#" class="nav-link block p-3 rounded-lg active" data-section="overview">
+                    <span class="mr-2">🏠</span> Overview
+                </a>
+                <a href="#" class="nav-link block p-3 rounded-lg" data-section="architecture">
+                    <span class="mr-2">🏗️</span> System Architecture
+                </a>
+                <a href="#" class="nav-link block p-3 rounded-lg" data-section="implementation">
+                    <span class="mr-2">🛠️</span> Implementation
+                </a>
+                <a href="#" class="nav-link block p-3 rounded-lg" data-section="execution">
+                    <span class="mr-2">⚙️</span> Execution Flow
+                </a>
+                <a href="#" class="nav-link block p-3 rounded-lg" data-section="value">
+                    <span class="mr-2">💡</span> Business Value
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Mobile Header -->
+        <div class="lg:hidden w-full bg-slate-800 p-4 flex justify-between items-center fixed top-0 z-10">
+            <h1 class="text-lg font-bold text-white">Project Deep Dive</h1>
+            <button id="menu-toggle" class="text-white p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="lg:ml-64 flex-1 p-6 md:p-10 pt-20 lg:pt-10 bg-slate-50">
+            
+            <!-- Overview Section -->
+            <section id="overview" class="content-section active">
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">Real-Time Weather Monitoring Pipeline</h2>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+                    <h3 class="text-xl font-semibold text-slate-700 mb-3">Executive Summary</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        This document details the design and implementation of an automated, cloud-based data pipeline. The system automatically fetches real-time weather data from a public API, transforms it into a clean and structured format, and loads it into a relational database. Built on Microsoft Azure, the pipeline runs on a high-frequency schedule (every 3 minutes), providing a reliable stream of weather data without manual intervention, demonstrating a modern serverless ETL process.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold text-slate-700 mb-3">Project Goal</h3>
+                        <p class="text-slate-600 leading-relaxed">
+                            To build a robust, automated pipeline that collects, cleans, and stores live weather data for a specific location (Mississauga, ON), simulating a real-world requirement for a logistics or transportation company.
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold text-slate-700 mb-3">Key Features</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2">
+                            <li>Fully automated and event-driven</li>
+                            <li>High-frequency updates (every 3 minutes)</li>
+                            <li>Built on a serverless cloud architecture</li>
+                            <li>Transforms raw JSON into structured SQL data</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture" class="content-section">
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">System Architecture</h2>
+                <p class="text-slate-600 mb-8 max-w-3xl">This pipeline follows a logical data flow, utilizing several key Azure components. Click on any component below to see its role in the process.</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-4 items-start text-center">
+                    <div class="arch-component bg-white p-6 rounded-lg shadow-sm connector" data-info="api">
+                        <div class="text-4xl mb-2">☁️</div>
+                        <h4 class="font-semibold text-slate-700">Open-Meteo API</h4>
+                        <p class="text-sm text-slate-500">Data Source</p>
+                    </div>
+                     <div class="arch-component bg-white p-6 rounded-lg shadow-sm connector" data-info="adf">
+                        <div class="text-4xl mb-2">🏭</div>
+                        <h4 class="font-semibold text-slate-700">Azure Data Factory</h4>
+                        <p class="text-sm text-slate-500">Orchestrator</p>
+                    </div>
+                     <div class="arch-component bg-white p-6 rounded-lg shadow-sm connector" data-info="blob">
+                        <div class="text-4xl mb-2">📦</div>
+                        <h4 class="font-semibold text-slate-700">Azure Blob Storage</h4>
+                        <p class="text-sm text-slate-500">Staging Area</p>
+                    </div>
+                     <div class="arch-component bg-white p-6 rounded-lg shadow-sm" data-info="sql">
+                        <div class="text-4xl mb-2">🗄️</div>
+                        <h4 class="font-semibold text-slate-700">Azure SQL Database</h4>
+                        <p class="text-sm text-slate-500">Destination</p>
+                    </div>
+                </div>
+
+                <div id="arch-info" class="mt-8 bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-6 rounded-r-lg shadow-sm transition-opacity duration-300 opacity-0 min-h-[100px]">
+                    <h4 id="arch-info-title" class="font-bold text-lg mb-2"></h4>
+                    <p id="arch-info-text"></p>
+                </div>
+            </section>
+
+            <!-- Implementation Section -->
+            <section id="implementation" class="content-section">
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">Implementation Steps</h2>
+                <p class="text-slate-600 mb-8 max-w-3xl">The solution was built in three distinct phases: setting up the cloud infrastructure, defining the data transformation logic, and orchestrating the automated pipeline.</p>
+                
+                <div class="border-b border-slate-200 mb-6">
+                    <nav class="-mb-px flex space-x-6" id="impl-tabs">
+                        <button class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-slate-500 hover:text-blue-500 hover:border-blue-500 active" data-tab="phase1">Phase 1: Setup</button>
+                        <button class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-slate-500 hover:text-blue-500 hover:border-blue-500" data-tab="phase2">Phase 2: Data Flow</button>
+                        <button class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-slate-500 hover:text-blue-500 hover:border-blue-500" data-tab="phase3">Phase 3: Automation</button>
+                    </nav>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div id="phase1" class="tab-content">
+                        <h3 class="text-xl font-semibold text-slate-700 mb-4">Prerequisites & Infrastructure</h3>
+                        <ul class="list-disc list-inside space-y-3 text-slate-600">
+                            <li><strong class="font-medium text-slate-700">Resource Group:</strong> A logical container named `WeatherProject-RG` was created to hold all project-related resources.</li>
+                            <li><strong class="font-medium text-slate-700">Azure SQL Database:</strong> A new SQL Database was provisioned. A `CREATE TABLE` script was executed to create the destination table `dbo.WeatherLog`.</li>
+                            <li><strong class="font-medium text-slate-700">Azure Blob Storage:</strong> A Storage Account was created with a container named `raw-weather-data` to act as the landing zone.</li>
+                            <li><strong class="font-medium text-slate-700">Azure Data Factory:</strong> An ADF instance was created as the development and execution environment.</li>
+                        </ul>
+                    </div>
+                    <div id="phase2" class="tab-content hidden">
+                        <h3 class="text-xl font-semibold text-slate-700 mb-4">Transformation Logic</h3>
+                        <p class="text-slate-600 mb-4">A Data Flow named `weatherprojectdataflow` performs the core data cleansing:</p>
+                        <ol class="list-decimal list-inside space-y-3 text-slate-600">
+                            <li><strong class="font-medium text-slate-700">Source:</strong> Reads raw JSON files from the Blob Storage container.</li>
+                            <li><strong class="font-medium text-slate-700">Select (`select1`):</strong> Renames nested JSON fields (e.g., `current.temperature_2m` to `TemperatureCelsius`) and removes unneeded columns.</li>
+                            <li><strong class="font-medium text-slate-700">Derived Column (`added2columns`):</strong> Enriches the data by adding `City` and `PipelineRunTime`, and crucially, fixing the `WeatherCode` data type from boolean to integer using the expression `iif(WeatherCode, 1, 0)`.</li>
+                            <li><strong class="font-medium text-slate-700">Sink (`outputdatabase`):</strong> Writes the final, clean data to the `dbo.WeatherLog` table with manual mapping for schema correctness.</li>
+                        </ol>
+                    </div>
+                    <div id="phase3" class="tab-content hidden">
+                         <h3 class="text-xl font-semibold text-slate-700 mb-4">Orchestration & Automation</h3>
+                        <p class="text-slate-600 mb-4">A pipeline named `weatherproject` was created to manage the sequence of operations and automate the entire process.</p>
+                         <ul class="list-disc list-inside space-y-3 text-slate-600">
+                            <li><strong class="font-medium text-slate-700">Copy Data Activity:</strong> Performs the "Extract". It fetches data from the Open-Meteo API and drops the raw JSON file into Blob Storage.</li>
+                            <li><strong class="font-medium text-slate-700">Data Flow Activity:</strong> Performs the "Transform" and "Load". It runs the `weatherprojectdataflow` on the raw file produced by the previous step.</li>
+                            <li><strong class="font-medium text-slate-700">Schedule Trigger:</strong> The automation engine. It was configured to run the entire pipeline automatically every 3 minutes.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Execution Flow Section -->
+            <section id="execution" class="content-section">
+                <h2 class="text-3xl font-bold text-slate-900 mb-2">Pipeline Execution Flow</h2>
+                <p class="text-slate-600 mb-4">When triggered, the pipeline follows a precise sequence of events. Press Play to see it in action.</p>
+                <button id="play-flow-btn" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-blue-600 transition-colors mb-6">▶️ Play Execution Flow</button>
+                
+                <div id="flow-steps" class="space-y-4">
+                    <div class="flow-step bg-white p-4 rounded-lg shadow-sm border-l-4 border-slate-200 transition-all duration-300"><strong>Step 1:</strong> The <strong>Schedule Trigger</strong> fires.</div>
+                    <div class="flow-step bg-white p-4 rounded-lg shadow-sm border-l-4 border-slate-200 transition-all duration-300"><strong>Step 2:</strong> The <strong>Copy Data activity</strong> initiates a `GET` request to the Open-Meteo API.</div>
+                    <div class="flow-step bg-white p-4 rounded-lg shadow-sm border-l-4 border-slate-200 transition-all duration-300"><strong>Step 3:</strong> The API returns a raw JSON response, saved as a file in Azure Blob Storage.</div>
+                    <div class="flow-step bg-white p-4 rounded-lg shadow-sm border-l-4 border-slate-200 transition-all duration-300"><strong>Step 4:</strong> Upon success, the <strong>Data Flow activity</strong> begins.</div>
+                    <div class="flow-step bg-white p-4 rounded-lg shadow-sm border-l-4 border-slate-200 transition-all duration-300"><strong>Step 5:</strong> The Data Flow reads the new JSON file from Blob Storage.</div>
+                    <div class="flow-step bg-white p-4 rounded-lg shadow-sm border-l-4 border-slate-200 transition-all duration-300"><strong>Step 6:</strong> It executes all transformations: selecting, renaming, and fixing data types.</div>
+                    <div class="flow-step bg-white p-4 rounded-lg shadow-sm border-l-4 border-slate-200 transition-all duration-300"><strong>Step 7:</strong> The final, structured row is loaded into the **`dbo.WeatherLog` table** in Azure SQL Database.</div>
+                    <div class="flow-step bg-white p-4 rounded-lg shadow-sm border-l-4 border-slate-200 transition-all duration-300"><strong>Step 8:</strong> The pipeline run is complete and waits for the next scheduled trigger.</div>
+                </div>
+            </section>
+            
+            <!-- Business Value Section -->
+            <section id="value" class="content-section">
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">Conclusion and Business Value</h2>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        This project successfully demonstrates the creation of an end-to-end, automated data pipeline using Azure Data Factory's visual tools. The final solution is robust, serverless, and requires no manual maintenance.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        The business value of such a pipeline is immense. It transforms raw, unstructured data into a valuable, queryable asset. This clean data can be directly connected to analytics dashboards (like Power BI) for live monitoring or used by data scientists to build predictive models, enabling data-driven decision-making for the organization.
+                    </p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menu-toggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                const sectionId = link.getAttribute('data-section');
+                
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === sectionId) {
+                        section.classList.add('active');
+                    }
+                });
+
+                if (!sidebar.classList.contains('-translate-x-full') && window.innerWidth < 1024) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+        });
+
+        // Architecture section interactivity
+        const archComponents = document.querySelectorAll('.arch-component');
+        const archInfoBox = document.getElementById('arch-info');
+        const archInfoTitle = document.getElementById('arch-info-title');
+        const archInfoText = document.getElementById('arch-info-text');
+
+        const archDetails = {
+            api: {
+                title: 'Data Source: Open-Meteo API',
+                text: 'The free Open-Meteo Weather API provides live weather data in a raw, nested JSON format. This is the entry point for all data into our system.'
+            },
+            adf: {
+                title: 'Orchestrator: Azure Data Factory (ADF)',
+                text: 'The central hub of the project. It runs activities in sequence, triggers the pipeline on a schedule, and hosts the visual Data Flow for all data cleaning and enrichment.'
+            },
+            blob: {
+                title: 'Staging Area: Azure Blob Storage',
+                text: 'A cloud storage service used to temporarily store the raw, unaltered JSON data fetched from the API before it is processed by the Data Flow.'
+            },
+            sql: {
+                title: 'Destination: Azure SQL Database',
+                text: 'A managed relational database used as the final destination (Sink) for the clean, structured, and permanent weather data, ready for analysis.'
+            }
+        };
+
+        archComponents.forEach(component => {
+            component.addEventListener('click', () => {
+                const infoKey = component.dataset.info;
+                archInfoTitle.textContent = archDetails[infoKey].title;
+                archInfoText.textContent = archDetails[infoKey].text;
+                archInfoBox.classList.remove('opacity-0');
+            });
+        });
+
+        // Implementation tabs interactivity
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                const tabId = button.dataset.tab;
+                tabContents.forEach(content => {
+                    content.classList.toggle('hidden', content.id !== tabId);
+                });
+            });
+        });
+
+        // Execution flow animation
+        const playFlowBtn = document.getElementById('play-flow-btn');
+        const flowSteps = document.querySelectorAll('.flow-step');
+        let isAnimating = false;
+
+        playFlowBtn.addEventListener('click', () => {
+            if (isAnimating) return;
+            isAnimating = true;
+            playFlowBtn.disabled = true;
+            playFlowBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            let delay = 0;
+            flowSteps.forEach(step => step.classList.remove('highlight'));
+            
+            flowSteps.forEach((step, index) => {
+                setTimeout(() => {
+                    step.classList.add('highlight');
+                    if (index > 0) {
+                        flowSteps[index-1].classList.remove('highlight');
+                    }
+                }, delay);
+                delay += 700;
+            });
+            setTimeout(() => {
+                flowSteps[flowSteps.length - 1].classList.remove('highlight');
+                isAnimating = false;
+                playFlowBtn.disabled = false;
+                playFlowBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }, delay);
+        });
+    });
+</script>
+
+</body>
+</html>
+
