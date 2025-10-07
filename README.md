@@ -24,4 +24,4 @@ The file `interactive_pipeline_documentation.html` is a single-page web applicat
 ## Live Demo
 
 You can view the interactive project showcase for this pipeline live at the following URL:
-[**[Click here to view the live interactive ]**](file:///C:/Users/User/Desktop/Azure%20DE/projects/project_showcase.html)
+[**[Click here to view the live interactive ]**](https://shiva13016.github.io/Azure-Real-Time-Weather-Pipeline/)
